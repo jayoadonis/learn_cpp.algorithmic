@@ -1,0 +1,16 @@
+.vs/
+.vscode/
+
+build/
+dist/
+out/
+output/
+install/
+
+.misc/
+
+.env*
+!.env.sample
+!.keep
+
+/Testing/

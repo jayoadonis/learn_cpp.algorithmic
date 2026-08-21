@@ -1,0 +1,41 @@
+#ifndef LEARN_CPP_ALGORITHMIC_ADVENTURE_WITH_LEET_CODE_UTIL
+#define LEARN_CPP_ALGORITHMIC_ADVENTURE_WITH_LEET_CODE_UTIL
+
+#include <string>
+#include <filesystem>
+#include "learn_cpp/algorithmic/adventure_with_leet_code/export.h"
+
+namespace learn_cpp::algorithmic::adventure_with_leet_code::util {
+
+  class LCXXA_AWLEETCODE_API Resource {
+
+    public: static std::string get_exec_parent_filepath();
+    //REM: [TODO]
+    public: static std::string get_persistent_resource_filepath();
+    //REM: [TODO]
+    public: static std::string get_temporary_resource_filepath();
+
+    /**
+     * @brief 
+     * 
+     * @param target_filepath
+     * @param required_root_filepath
+     * 
+     * @throws std::runtime_error If the target filepath is not located inside the required root filepath.
+     */
+    public: static void validate_filepath(
+      std::filesystem::path const & target_filepath,
+      std::filesystem::path const & required_root_filepath 
+    );
+  };
+
+  #if defined(_WIN32)
+  # define FILEPATH_SEPARATOR '\\'
+  # define LIST_PATH_SEPARATOR ';'
+  #else
+  # define FILEPATH_SEPARATOR '/'
+  # define LIST_PATH_SEPARATOR ':'
+  #endif
+}
+
+#endif
