@@ -20,33 +20,38 @@ file(GLOB_RECURSE
 add_library(${_PROJECT_TARGET_MAIN_NAME}
   ${_PROJECT_TARGET_MAIN_TYPE})
 
-#REM: our.group::project_target_(app|static|shared|obj)
+# REM: our.group::project_target_(app|static|shared|obj)
 add_library(${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
   ALIAS ${_PROJECT_TARGET_MAIN_NAME})
+
+#REM: for libraries intended to be consumed by other targets
+target_compile_features(${_PROJECT_TARGET_MAIN_NAME}
+  PUBLIC cxx_std_17)
 
 set_target_properties(${_PROJECT_TARGET_MAIN_NAME}
   PROPERTIES
   OUTPUT_NAME "$<LOWER_CASE:${_PROJECT_NAME}-${_PROJECT_VERSION}-$<$<CONFIG:Debug>:debug->${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}>"
-  
-  CXX_STANDARD 17
-  CXX_STANDARD_REQUIRED ON
+
+  #REM: for application/executable only targets
+  # CXX_STANDARD 17
+  # CXX_STANDARD_REQUIRED ON
+  #REM: all kind of targets
   CXX_EXTENSIONS OFF
-  
+
   CXX_VISIBILITY_PRESET hidden
   VISIBILITY_INLINES_HIDDEN ON
-  
+
   COMPILE_WARNING_AS_ERROR ${LCXXA_AWLEETCODE_FAIL_WARN})
 
 # #REM: [Template Read-only Resources]
 # if(WIN32)
-#     set(_PROJECT_RESOURCE_RELATIVE_DIR "resources")
+# set(_PROJECT_RESOURCE_RELATIVE_DIR "resources")
 # else()
-#     set(_PROJECT_RESOURCE_RELATIVE_DIR "../share/${_PROJECT_NAME}/resources")
+# set(_PROJECT_RESOURCE_RELATIVE_DIR "../share/${_PROJECT_NAME}/resources")
 # endif()
 # target_compile_definitions(myapp PRIVATE
-#     LCXXA_AWLEETCODE_API_RES_REL_DIR="${_PROJECT_RESOURCE_RELATIVE_DIR}"
+# LCXXA_AWLEETCODE_API_RES_REL_DIR="${_PROJECT_RESOURCE_RELATIVE_DIR}"
 # )
-
 if(NOT LCXXA_AWLEETCODE_TOGGLE_SHARED)
   target_compile_definitions(
     ${_PROJECT_TARGET_MAIN_NAME}
@@ -78,7 +83,7 @@ target_include_directories(${_PROJECT_TARGET_MAIN_NAME}
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/private)
 
-#REM: [BUILD TREE, PRE_BUILD] Runtime Path Resource Handling
+# REM: [BUILD TREE, PRE_BUILD] Runtime Path Resource Handling
 add_custom_command(TARGET
   ${_PROJECT_TARGET_MAIN_NAME}
   PRE_BUILD
@@ -90,17 +95,17 @@ add_custom_command(TARGET
   COMMENT "::: Synchronizing main resources"
 )
 
-#REM: [BUILD TREE, POST_BUILD] (Windows) shared libraries
+# REM: [BUILD TREE, POST_BUILD] (Windows) shared libraries
 if(WIN32 AND LCXXA_AWLEETCODE_TOGGLE_SHARED)
-  # get_target_property(_OUTPUT_NAME 
-    # ${_PROJECT_TARGET_MAIN_NAME} OUTPUT_NAME)
-
+  # get_target_property(_OUTPUT_NAME
+  # ${_PROJECT_TARGET_MAIN_NAME} OUTPUT_NAME)
   add_custom_command(TARGET
     ${_PROJECT_TARGET_MAIN_NAME}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND}
     "-DSRC_FILES=$<TARGET_RUNTIME_DLLS:${_PROJECT_TARGET_MAIN_NAME}>"
     "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_MAIN_NAME}>"
+
     # "-DMANIFEST_FILE=${CMAKE_CURRENT_BINARY_DIR}/.sync_copy_files_runtime_dlls.$<CONFIG>.manifest"
     # "-DMANIFEST_FILE=.sync_dlls_${_OUTPUT_NAME}.manifest"
     "-DMANIFEST_FILE=.sync_dlls_${_PROJECT_TARGET_MAIN_NAME}.$<CONFIG>.manifest"
@@ -110,15 +115,18 @@ if(WIN32 AND LCXXA_AWLEETCODE_TOGGLE_SHARED)
   )
 endif()
 
-#REM: [INSTALL & BUILD TREE for RPATH] (Linux & macOS) shared libraries
+# REM: [INSTALL & BUILD TREE for RPATH] (Linux & macOS) shared libraries
 if(UNIX)
   set_target_properties(myapp PROPERTIES
-    INSTALL_RPATH "$ORIGIN/../lib"          #REM: Linux
+    INSTALL_RPATH "$ORIGIN/../lib" # REM: Linux
+
     # BUILD_RPATH     "$ORIGIN/../lib"
   )
+
   if(APPLE)
     set_target_properties(myapp PROPERTIES
       INSTALL_RPATH "@executable_path/../lib"
+
       # BUILD_RPATH "@executable_path/../lib"
     )
   endif()
@@ -135,7 +143,7 @@ install(TARGETS
 
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   COMPONENT ${_PROJECT_NAME}_main
-  
+
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   COMPONENT ${_PROJECT_NAME}_main
 
@@ -150,14 +158,14 @@ install(EXPORT ${_PROJECT_NAME}_targets
   COMPONENT ${_PROJECT_NAME}_main)
 
 if(WIN32)
-    set(_PROJECT_RESOURCE_DESTINATION 
-      ${CMAKE_INSTALL_BINDIR}/resources)
+  set(_PROJECT_RESOURCE_DESTINATION
+    ${CMAKE_INSTALL_BINDIR}/resources)
 else()
-    set(_PROJECT_RESOURCE_DESTINATION 
-      ${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources)
+  set(_PROJECT_RESOURCE_DESTINATION
+    ${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources)
 endif()
 
-#REM: [INSTALL] Runtime Path Resource Handling
+# REM: [INSTALL] Runtime Path Resource Handling
 install(
   DIRECTORY "${PROJECT_SOURCE_DIR}/src/main/resources/"
   DESTINATION "${_PROJECT_RESOURCE_DESTINATION}"
