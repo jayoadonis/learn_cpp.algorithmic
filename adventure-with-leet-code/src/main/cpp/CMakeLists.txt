@@ -24,7 +24,7 @@ add_library(${_PROJECT_TARGET_MAIN_NAME}
 add_library(${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
   ALIAS ${_PROJECT_TARGET_MAIN_NAME})
 
-#REM: for libraries intended to be consumed by other targets
+# REM: for libraries intended to be consumed by other targets
 target_compile_features(${_PROJECT_TARGET_MAIN_NAME}
   PUBLIC cxx_std_17)
 
@@ -32,10 +32,10 @@ set_target_properties(${_PROJECT_TARGET_MAIN_NAME}
   PROPERTIES
   OUTPUT_NAME "$<LOWER_CASE:${_PROJECT_NAME}-${_PROJECT_VERSION}-$<$<CONFIG:Debug>:debug->${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}>"
 
-  #REM: for application/executable only targets
+  # REM: for application/executable only targets
   # CXX_STANDARD 17
   # CXX_STANDARD_REQUIRED ON
-  #REM: all kind of targets
+  # REM: all kind of targets
   CXX_EXTENSIONS OFF
 
   CXX_VISIBILITY_PRESET hidden
@@ -112,6 +112,22 @@ if(WIN32 AND LCXXA_AWLEETCODE_TOGGLE_SHARED)
     -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-files-0.1.1-process.cmake"
     VERBATIM
     COMMENT "::: Synchronizing Windows runtime dlls relative to main executable  natively"
+  )
+endif()
+
+if(BUILD_TESTING)
+  add_library(${_PROJECT_TARGET_MAIN_NAME}_interface INTERFACE)
+  add_library(${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}_interface
+    ALIAS ${_PROJECT_TARGET_MAIN_NAME}_interface)
+
+  target_include_directories(${_PROJECT_TARGET_MAIN_NAME}_interface
+    INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/private
+  )
+
+  target_link_libraries(${_PROJECT_TARGET_MAIN_NAME}_interface
+    INTERFACE
+    ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
   )
 endif()
 

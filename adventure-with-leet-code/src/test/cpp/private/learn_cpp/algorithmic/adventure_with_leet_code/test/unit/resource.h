@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include "learn_cpp/algorithmic/adventure_with_leet_code/util/Resource.h"
+#include "learn_cpp/algorithmic/adventure_with_leet_code/easy/func_ii.internal.h"
 
 using namespace learn_cpp::algorithmic;
 

@@ -77,9 +77,9 @@ list(APPEND CMAKE_PREFIX_PATH
   "${_PROJECT_STAGING_PREFIX_PATH}"
   "${_PROJECT_STAGING_PREFIX_PATH}/${_PROJECT_GROUP}/${_PROJECT_NAME}")
 
-add_subdirectory("src/main/cpp")
-
 include(CTest)
+
+add_subdirectory("src/main/cpp")
 
 if(BUILD_TESTING)
   enable_testing()

@@ -83,12 +83,14 @@ target_sources(${_PROJECT_TARGET_TEST_NAME}
 target_include_directories(${_PROJECT_TARGET_TEST_NAME} BEFORE
   PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/private"
-  "${PROJECT_SOURCE_DIR}/src/main/cpp/private"
+  #REM: Instead of doing this, we use the 'INTERFACE' for 'BUILD_TESTING'
+  # "${PROJECT_SOURCE_DIR}/src/main/cpp/private"
 )
 
 target_link_libraries(${_PROJECT_TARGET_TEST_NAME}
   PRIVATE
-  ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
+  # ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
+  ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}_interface #REM: for testing
   Catch2::Catch2
 )
 
