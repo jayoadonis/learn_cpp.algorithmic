@@ -11,7 +11,7 @@
   + [Packaging](#packaging-toc)
 
 ## Feature (Project)
-+ adventure-with-leet-code
++ [adventure-with-leet-code](adventure-with-leet-code/)
 
 ## Run
 ### Configuration [^ToC](#table-of-content)
