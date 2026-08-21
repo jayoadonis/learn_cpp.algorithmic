@@ -64,7 +64,7 @@ int main(int arg_c, char* arg_v[]) {
 //     Resource::get_exec_parent_filepath();
 
 //   std::string data_test_sqlite 
-//     = exec_parent_filepath + FILEPATH_SEPARATOR + "resources" + FILEPATH_SEPARATOR + "data.test.db";
+//     = exec_parent_filepath + PATH_SEPARATOR + "resources" + PATH_SEPARATOR + "data.test.db";
 
 //   adventure_with_leet_code::util::Resource::validate_filepath(
 //     data_test_sqlite,

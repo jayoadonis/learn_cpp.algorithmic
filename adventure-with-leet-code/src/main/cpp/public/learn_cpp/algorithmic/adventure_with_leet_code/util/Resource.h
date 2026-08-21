@@ -30,10 +30,10 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util {
   };
 
   #if defined(_WIN32)
-  # define FILEPATH_SEPARATOR '\\'
+  # define PATH_SEPARATOR '\\'
   # define LIST_PATH_SEPARATOR ';'
   #else
-  # define FILEPATH_SEPARATOR '/'
+  # define PATH_SEPARATOR '/'
   # define LIST_PATH_SEPARATOR ':'
   #endif
 }
