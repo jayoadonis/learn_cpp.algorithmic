@@ -6,7 +6,7 @@
 + [Runtime Path Resource Handling](#runtime-path-resource-handling-toc)
 ---
 ## Easy [^ToC](#table-of-content)
-+ 2SUM
++ [2SUM](src/main/cpp/public/learn_cpp/algorithmic/adventure_with_leet_code/easy/)
 ---
 ## Project Structure [^ToC](#table-of-content)
 ```bash
