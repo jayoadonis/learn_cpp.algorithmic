@@ -1,5 +1,8 @@
 include(FetchContent)
 
+# set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE "OPT_IN"
+  # CACHE STRING "Enable system package fallback")
+
 set(CATCH_INSTALL_DOCS OFF CACHE INTERNAL
   "Disable Catch2 docs generation" FORCE)
 set(CATCH_ENABLE_WERROR OFF CACHE INTERNAL
@@ -24,7 +27,7 @@ FetchContent_Declare(
   TIMEOUT 20
 
   #REM: Find library locally, otherwise, proceed subbuild/downloading
-  FIND_PACKAGE_ARGS Catch2 3.15.3 REQUIRED
+  FIND_PACKAGE_ARGS NAMES Catch2 catch2 catch VERSION 3.15.3
 )
 set(_OLD_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
 
