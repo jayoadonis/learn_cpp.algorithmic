@@ -53,7 +53,7 @@ set_target_properties(${_PROJECT_TARGET_TEST_NAME}
   PROPERTIES
   OUTPUT_NAME "$<LOWER_CASE:${_PROJECT_NAME}-${_PROJECT_VERSION}-$<CONFIG>-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}>"
 
-  #REM: for application/executable only targets
+  #REM: for application/executable only targets, otherwise, use the 'target_compile_features'
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON
   #REM: all kind of targets
