@@ -52,7 +52,7 @@ set_target_properties(${_PROJECT_TARGET_MAIN_NAME}
 # target_compile_definitions(myapp PRIVATE
 # LCXXA_AWLEETCODE_API_RES_REL_DIR="${_PROJECT_RESOURCE_RELATIVE_DIR}"
 # )
-if(NOT LCXXA_AWLEETCODE_TOGGLE_SHARED)
+if(NOT LCXXA_AWLEETCODE_TOGGLE_SHARED #[[AND NOT LCXXA_AWLEETCODE_MAIN_TOGGLE_SHARED]])
   target_compile_definitions(
     ${_PROJECT_TARGET_MAIN_NAME}
     PUBLIC
@@ -96,7 +96,8 @@ add_custom_command(TARGET
 )
 
 # REM: [BUILD TREE, POST_BUILD] (Windows) shared libraries
-if(WIN32 AND LCXXA_AWLEETCODE_TOGGLE_SHARED)
+if(WIN32 AND (LCXXA_AWLEETCODE_TOGGLE_SHARED #[[OR LCXXA_AWLEETCODE_MAIN_TOGGLE_SHARED]]))
+
   # get_target_property(_OUTPUT_NAME
   # ${_PROJECT_TARGET_MAIN_NAME} OUTPUT_NAME)
   add_custom_command(TARGET
@@ -131,7 +132,7 @@ if(BUILD_TESTING)
   )
 endif()
 
-# REM: [INSTALL & BUILD TREE for RPATH] (Linux & macOS) shared libraries
+# REM: [INSTALL & BUILD TREE for RPATH/RUNPATH] (Linux & macOS) shared libraries
 if(UNIX)
   set_target_properties(myapp PROPERTIES
     INSTALL_RPATH "$ORIGIN/../lib" # REM: Linux
