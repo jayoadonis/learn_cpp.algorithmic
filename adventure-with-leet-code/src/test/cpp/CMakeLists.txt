@@ -22,6 +22,9 @@ FetchContent_Declare(
   GIT_SHALLOW ON
   GIT_PROGRESS ON
   TIMEOUT 20
+
+  #REM: Find library locally, otherwise, proceed subbuild/downloading
+  FIND_PACKAGE_ARGS Catch2 3.15.3 REQUIRED
 )
 set(_OLD_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
 
