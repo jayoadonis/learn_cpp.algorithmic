@@ -56,13 +56,13 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util
 
         //REM: Convert safely to a UTF-8 encoded std::string
         int size_needed = WideCharToMultiByte(
-          CP_UTF8, 
-          0, 
-          wpath.c_str(), 
-          static_cast<int>(wpath.length()), 
-          NULL, 
-          0, 
-          NULL, 
+          CP_UTF8,
+          0,
+          wpath.c_str(),
+          static_cast<int>(wpath.length()),
+          NULL,
+          0,
+          NULL,
           NULL
         );
 
@@ -70,13 +70,13 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util
         {
           filepath.resize(static_cast<std::size_t>(size_needed));
           WideCharToMultiByte(
-            CP_UTF8, 
-            0, 
-            wpath.c_str(), 
-            static_cast<int>(wpath.length()), 
-            &filepath[0], 
-            size_needed, 
-            NULL, 
+            CP_UTF8,
+            0,
+            wpath.c_str(),
+            static_cast<int>(wpath.length()),
+            &filepath[0],
+            size_needed,
+            NULL,
             NULL
           );
         }
@@ -132,14 +132,65 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util
     return ".";
   }
 
-  void Resource::validate_filepath(
-    std::filesystem::path const & target_filepath,
+  // void Resource::validate_path(
+  //   std::filesystem::path const& target_filepath,
+  //   std::filesystem::path const& required_root_filepath
+  // ) {
+  //   std::string target = target_filepath.string();
+  //   std::string root = required_root_filepath.string();
+
+  //   if (target.find(root) != 0)
+  //     throw std::runtime_error("Security Exception: Directory traversal violation blocked outside system control.");
+  // }
+
+  bool Resource::validate_path(
+    std::filesystem::path const & user_input,
     std::filesystem::path const & required_root_filepath
   ) {
-    std::string target = target_filepath.string();
-    std::string root = required_root_filepath.string();
 
-    if(target.find(root) != 0)
-      throw std::runtime_error("Security Exception: Directory traversal violation blocked outside system control.");
+    std::error_code ec;
+
+    //REM: Optional but recommended: reject absolute user input explicitly
+    // if (user_input.is_absolute())
+    //     return false;
+
+    //REM: It resolve paths (resolve path traversal, symlinks final location, normalized paths)
+    std::filesystem::path canonical_root 
+      = std::filesystem::weakly_canonical(
+          required_root_filepath, ec);
+    
+    if (ec)
+      return false;
+
+    if (!std::filesystem::is_directory(canonical_root, ec) || ec)
+      return false;
+
+    std::filesystem::path combined 
+      = user_input.is_absolute()
+        ? user_input
+        : required_root_filepath / user_input;
+
+    //REM: It resolve paths (resolve path traversal, symlinks final location, normalized paths)
+    std::filesystem::path secure_target 
+      = std::filesystem::weakly_canonical(combined, ec);
+
+    if (ec)
+      return false;
+
+    //REM: canonical_root ---> /root/path/
+    //REM: secure_target ---> /root/path/to/secure/target.ext
+    //REM: ===
+    //REM: pair.first (fs::path::iter) ---> canonical_root.end() [UB address]
+    //REM: pari.second (fs::path::iter) ---> "to"
+    std::pair<
+      std::filesystem::path::iterator, std::filesystem::path::iterator
+    > result = std::mismatch(
+        canonical_root.begin(), 
+        canonical_root.end(),
+        secure_target.begin(), 
+        secure_target.end()
+      );
+
+    return result.first == canonical_root.end();
   }
 }

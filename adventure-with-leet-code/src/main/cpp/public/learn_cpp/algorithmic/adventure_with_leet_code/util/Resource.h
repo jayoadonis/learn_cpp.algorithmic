@@ -21,9 +21,9 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util {
      * @param target_filepath
      * @param required_root_filepath
      * 
-     * @throws std::runtime_error If the target filepath is not located inside the required root filepath.
+     * @return bool
      */
-    public: static void validate_filepath(
+    public: static bool validate_path(
       std::filesystem::path const & target_filepath,
       std::filesystem::path const & required_root_filepath 
     );
