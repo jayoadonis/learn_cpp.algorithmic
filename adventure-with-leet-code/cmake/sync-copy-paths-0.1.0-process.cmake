@@ -1,4 +1,16 @@
 
+#[[ sync-copy-paths-0.1.0-process.cmake
+add_custom_command(TARGET
+  ${_PROJECT_TARGET_TEST_NAME}
+  PRE_BUILD
+  COMMAND ${CMAKE_COMMAND}
+  "-DSRC_DIR=${PROJECT_SOURCE_DIR}/src/test/resources"
+  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>/../${_PROJECT_RESOURCE_DESTINATION}"
+  -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.0-process.cmake"
+  VERBATIM
+  COMMENT "::: Synchronizing test resources"
+)
+]]
 if(NOT DEFINED SRC_DIR)
   message(FATAL_ERROR "SRC_DIR is required")
 endif()
