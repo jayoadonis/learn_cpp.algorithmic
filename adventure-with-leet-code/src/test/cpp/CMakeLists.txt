@@ -1,8 +1,7 @@
 include(FetchContent)
 
 # set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE "OPT_IN"
-  # CACHE STRING "Enable system package fallback")
-
+# CACHE STRING "Enable system package fallback")
 set(CATCH_INSTALL_DOCS OFF CACHE INTERNAL
   "Disable Catch2 docs generation" FORCE)
 set(CATCH_ENABLE_WERROR OFF CACHE INTERNAL
@@ -26,7 +25,7 @@ FetchContent_Declare(
   GIT_PROGRESS ON
   TIMEOUT 20
 
-  #REM: Find library locally, otherwise, proceed subbuild/downloading
+  # REM: Find library locally, otherwise, proceed subbuild/downloading
   FIND_PACKAGE_ARGS NAMES Catch2 catch2 catch VERSION 3.15.3
 )
 set(_OLD_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
@@ -55,14 +54,21 @@ file(GLOB_RECURSE
 
 add_executable(${_PROJECT_TARGET_TEST_NAME})
 
+include(GNUInstallDirs)
+
 set_target_properties(${_PROJECT_TARGET_TEST_NAME}
   PROPERTIES
   OUTPUT_NAME "$<LOWER_CASE:${_PROJECT_NAME}-${_PROJECT_VERSION}-$<CONFIG>-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}>"
+  
+  RUNTIME_OUTPUT_DIRECTORY $<CONFIG>/${CMAKE_INSTALL_BINDIR}
+  LIBRARY_OUTPUT_DIRECTORY $<CONFIG>/${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE_OUTPUT_DIRECTORY $<CONFIG>/${CMAKE_INSTALL_LIBDIR}
 
-  #REM: for application/executable only targets, otherwise, use the 'target_compile_features'
+  # REM: for application/executable only targets, otherwise, use the 'target_compile_features'
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON
-  #REM: all kind of targets
+
+  # REM: all kind of targets
   CXX_EXTENSIONS OFF
 
   CXX_VISIBILITY_PRESET hidden
@@ -89,14 +95,16 @@ target_sources(${_PROJECT_TARGET_TEST_NAME}
 target_include_directories(${_PROJECT_TARGET_TEST_NAME} BEFORE
   PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/private"
-  #REM: Instead of doing this, we use the 'INTERFACE' for 'BUILD_TESTING'
+
+  # REM: Instead of doing this, we use the 'INTERFACE' for 'BUILD_TESTING'
   # "${PROJECT_SOURCE_DIR}/src/main/cpp/private"
 )
 
 target_link_libraries(${_PROJECT_TARGET_TEST_NAME}
   PRIVATE
+
   # ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
-  ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}_interface #REM: for testing
+  ${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}_interface # REM: for testing
   Catch2::Catch2
 )
 
@@ -112,28 +120,36 @@ catch_discover_tests(${_PROJECT_TARGET_TEST_NAME}
   LABELS "all"
 )
 
-#REM: [PRE_BUILD] Runtime Path Resource Handling
+if(WIN32)
+  set(_PROJECT_RESOURCE_DESTINATION
+    ${CMAKE_INSTALL_BINDIR}/resources)
+else()
+  set(_PROJECT_RESOURCE_DESTINATION
+    ${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources)
+endif()
+
+# REM: [PRE_BUILD] Runtime Path Resource Handling
 add_custom_command(TARGET
   ${_PROJECT_TARGET_TEST_NAME}
   PRE_BUILD
   COMMAND ${CMAKE_COMMAND}
   "-DSRC_DIR=${PROJECT_SOURCE_DIR}/src/test/resources"
-  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>/resources"
+  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>/../${_PROJECT_RESOURCE_DESTINATION}"
   -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.0-process.cmake"
   VERBATIM
   COMMENT "::: Synchronizing test resources"
 )
 
 if(WIN32 #[[AND LCXXA_AWLEETCODE_TOGGLE_SHARED]])
-  # get_target_property(_OUTPUT_NAME 
-  #   ${_PROJECT_TARGET_TEST_NAME} OUTPUT_NAME)
-
+  # get_target_property(_OUTPUT_NAME
+  # ${_PROJECT_TARGET_TEST_NAME} OUTPUT_NAME)
   add_custom_command(TARGET
     ${_PROJECT_TARGET_TEST_NAME}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND}
     "-DSRC_FILES=$<TARGET_RUNTIME_DLLS:${_PROJECT_TARGET_TEST_NAME}>"
     "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>"
+
     # "-DMANIFEST_FILE=${CMAKE_CURRENT_BINARY_DIR}/.sync_copy_files_runtime_dlls.$<CONFIG>.manifest"
     # "-DMANIFEST_FILE=.sync_dlls_${_OUTPUT_NAME}.manifest"
     "-DMANIFEST_FILE=.sync_dlls_${_PROJECT_TARGET_TEST_NAME}.$<CONFIG>.manifest"

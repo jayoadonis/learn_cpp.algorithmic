@@ -28,9 +28,15 @@ add_library(${_PROJECT_GROUP}::${_PROJECT_TARGET_MAIN_NAME}
 target_compile_features(${_PROJECT_TARGET_MAIN_NAME}
   PUBLIC cxx_std_17)
 
+include(GNUInstallDirs)
+
 set_target_properties(${_PROJECT_TARGET_MAIN_NAME}
   PROPERTIES
   OUTPUT_NAME "$<LOWER_CASE:${_PROJECT_NAME}-${_PROJECT_VERSION}-$<$<CONFIG:Debug>:debug->${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}>"
+
+  RUNTIME_OUTPUT_DIRECTORY $<CONFIG>/${CMAKE_INSTALL_BINDIR}
+  LIBRARY_OUTPUT_DIRECTORY $<CONFIG>/${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE_OUTPUT_DIRECTORY $<CONFIG>/${CMAKE_INSTALL_LIBDIR}
 
   # REM: for application/executable only targets, otherwise, use the 'target_compile_features'
   # CXX_STANDARD 17
@@ -83,21 +89,28 @@ target_include_directories(${_PROJECT_TARGET_MAIN_NAME}
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/private)
 
+if(WIN32)
+  set(_PROJECT_RESOURCE_DESTINATION
+    ${CMAKE_INSTALL_BINDIR}/resources)
+else()
+  set(_PROJECT_RESOURCE_DESTINATION
+    ${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources)
+endif()
+
 # REM: [BUILD TREE, PRE_BUILD] Runtime Path Resource Handling
 add_custom_command(TARGET
   ${_PROJECT_TARGET_MAIN_NAME}
   PRE_BUILD
   COMMAND ${CMAKE_COMMAND}
   "-DSRC_DIR=${PROJECT_SOURCE_DIR}/src/main/resources"
-  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_MAIN_NAME}>/resources"
+  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_MAIN_NAME}>/../${_PROJECT_RESOURCE_DESTINATION}"
   -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.0-process.cmake"
   VERBATIM
   COMMENT "::: Synchronizing main resources"
 )
 
 # REM: [BUILD TREE, POST_BUILD] (Windows) shared libraries
-if(WIN32 AND (LCXXA_AWLEETCODE_TOGGLE_SHARED #[[OR LCXXA_AWLEETCODE_MAIN_TOGGLE_SHARED]]))
-
+if(WIN32 AND(LCXXA_AWLEETCODE_TOGGLE_SHARED #[[OR LCXXA_AWLEETCODE_MAIN_TOGGLE_SHARED]]))
   # get_target_property(_OUTPUT_NAME
   # ${_PROJECT_TARGET_MAIN_NAME} OUTPUT_NAME)
   add_custom_command(TARGET
@@ -149,8 +162,6 @@ if(UNIX)
   endif()
 endif()
 
-include(GNUInstallDirs)
-
 install(TARGETS
   ${_PROJECT_TARGET_MAIN_NAME}
   EXPORT ${_PROJECT_NAME}_targets
@@ -173,14 +184,6 @@ install(EXPORT ${_PROJECT_NAME}_targets
   FILE ${_PROJECT_INSTALL_CONFIG_PREFIX_NAME}-targets.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${_PROJECT_INSTALL_CONFIG_PREFIX_NAME}
   COMPONENT ${_PROJECT_NAME}_main)
-
-if(WIN32)
-  set(_PROJECT_RESOURCE_DESTINATION
-    ${CMAKE_INSTALL_BINDIR}/resources)
-else()
-  set(_PROJECT_RESOURCE_DESTINATION
-    ${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources)
-endif()
 
 # REM: [INSTALL] Runtime Path Resource Handling
 install(
