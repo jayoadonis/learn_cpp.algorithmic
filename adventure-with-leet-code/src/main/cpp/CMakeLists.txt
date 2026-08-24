@@ -147,14 +147,14 @@ endif()
 
 # REM: [INSTALL & BUILD TREE for RPATH/RUNPATH] (Linux & macOS) shared libraries
 if(UNIX)
-  set_target_properties(myapp PROPERTIES
+  set_target_properties(${_PROJECT_TARGET_MAIN_NAME} PROPERTIES
     INSTALL_RPATH "$ORIGIN/../lib" # REM: Linux
 
     # BUILD_RPATH     "$ORIGIN/../lib"
   )
 
   if(APPLE)
-    set_target_properties(myapp PROPERTIES
+    set_target_properties(${_PROJECT_TARGET_MAIN_NAME} PROPERTIES
       INSTALL_RPATH "@executable_path/../lib"
 
       # BUILD_RPATH "@executable_path/../lib"
