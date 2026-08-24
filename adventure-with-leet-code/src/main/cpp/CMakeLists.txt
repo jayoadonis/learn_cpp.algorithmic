@@ -104,7 +104,7 @@ add_custom_command(TARGET
   COMMAND ${CMAKE_COMMAND}
   "-DSRC_DIR=${PROJECT_SOURCE_DIR}/src/main/resources"
   "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_MAIN_NAME}>/../${_PROJECT_RESOURCE_DESTINATION}"
-  -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.0-process.cmake"
+  -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.1-process.cmake"
   VERBATIM
   COMMENT "::: Synchronizing main resources"
 )
@@ -125,7 +125,7 @@ if(WIN32 AND(LCXXA_AWLEETCODE_TOGGLE_SHARED #[[OR LCXXA_AWLEETCODE_MAIN_TOGGLE_S
     "-DMANIFEST_FILE=.sync_dlls_${_PROJECT_TARGET_MAIN_NAME}.$<CONFIG>.manifest"
     -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-files-0.1.1-process.cmake"
     VERBATIM
-    COMMENT "::: Synchronizing Windows runtime dlls relative to main executable  natively"
+    COMMENT "::: Synchronizing Windows runtime dlls relative natively"
   )
 endif()
 

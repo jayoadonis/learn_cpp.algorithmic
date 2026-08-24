@@ -135,7 +135,7 @@ add_custom_command(TARGET
   COMMAND ${CMAKE_COMMAND}
   "-DSRC_DIR=${PROJECT_SOURCE_DIR}/src/test/resources"
   "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>/../${_PROJECT_RESOURCE_DESTINATION}"
-  -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.0-process.cmake"
+  -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.1-process.cmake"
   VERBATIM
   COMMENT "::: Synchronizing test resources"
 )
