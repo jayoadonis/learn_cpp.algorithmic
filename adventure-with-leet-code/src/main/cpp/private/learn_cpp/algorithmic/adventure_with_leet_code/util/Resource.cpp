@@ -22,7 +22,7 @@
 namespace learn_cpp::algorithmic::adventure_with_leet_code::util
 {
 
-  std::string Resource::get_exec_parent_filepath()
+  std::string Resource::get_exec_parent_dir()
   {
     std::string filepath;
     std::size_t idx = std::string::npos;
@@ -134,30 +134,30 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util
 
   // void Resource::validate_path(
   //   std::filesystem::path const& target_filepath,
-  //   std::filesystem::path const& required_root_filepath
+  //   std::filesystem::path const& required_root_dir
   // ) {
   //   std::string target = target_filepath.string();
-  //   std::string root = required_root_filepath.string();
+  //   std::string root = required_root_dir.string();
 
   //   if (target.find(root) != 0)
   //     throw std::runtime_error("Security Exception: Directory traversal violation blocked outside system control.");
   // }
 
   bool Resource::validate_path(
-    std::filesystem::path const & user_input,
-    std::filesystem::path const & required_root_filepath
+    std::filesystem::path const & target_filepath,
+    std::filesystem::path const & required_root_dir
   ) {
 
     std::error_code ec;
 
     //REM: Optional but recommended: reject absolute user input explicitly
-    // if (user_input.is_absolute())
+    // if (target_filepath.is_absolute())
     //     return false;
 
     //REM: It resolve paths (resolve path traversal, symlinks final location, normalized paths)
     std::filesystem::path canonical_root 
       = std::filesystem::weakly_canonical(
-          required_root_filepath, ec);
+          required_root_dir, ec);
     
     if (ec)
       return false;
@@ -166,9 +166,9 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util
       return false;
 
     std::filesystem::path combined 
-      = user_input.is_absolute()
-        ? user_input
-        : required_root_filepath / user_input;
+      = target_filepath.is_absolute()
+        ? target_filepath
+        : required_root_dir / target_filepath;
 
     //REM: It resolve paths (resolve path traversal, symlinks final location, normalized paths)
     std::filesystem::path secure_target 

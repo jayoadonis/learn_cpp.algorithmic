@@ -15,13 +15,13 @@ using namespace learn_cpp::algorithmic;
 
 TEST_CASE("testing resource", "[unit]") {
 
-  std::string exec_parent_filepath 
+  std::string exec_parent_dir 
     = adventure_with_leet_code::util::Resource::
-    get_exec_parent_filepath();
+    get_exec_parent_dir();
 
   SECTION("check exec parent path") {
 
-    REQUIRE( !exec_parent_filepath.empty() );
+    REQUIRE( !exec_parent_dir.empty() );
   }
 
   SECTION("Check 2sum content") {
@@ -35,9 +35,8 @@ TEST_CASE("testing resource", "[unit]") {
     #endif
     std::filesystem::path filepath 
       = adventure_with_leet_code::util::Resource::
-        get_exec_parent_filepath() + "/" + REZ + "/data/2sum.test.txt";
+        get_exec_parent_dir() + "/" + REZ + "/data/2sum.test.txt";
 
-  
     // std::fprintf(stdout, ">>><<<< %s\n", 
     //   filepath.string().c_str());
 
@@ -64,11 +63,11 @@ TEST_CASE("testing resource ii", "[unit]") {
 
   SECTION("check exec parent path") {
 
-    std::string exec_parent_filepath 
+    std::string exec_parent_dir 
       = adventure_with_leet_code::util::Resource::
-        get_exec_parent_filepath();
+        get_exec_parent_dir();
 
-    REQUIRE( !exec_parent_filepath.empty() );
+    REQUIRE( !exec_parent_dir.empty() );
 
   }
 }

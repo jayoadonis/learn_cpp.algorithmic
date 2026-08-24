@@ -9,23 +9,23 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util {
 
   class LCXXA_AWLEETCODE_API Resource {
 
-    public: static std::string get_exec_parent_filepath();
+    public: static std::string get_exec_parent_dir();
     //REM: [TODO]
-    public: static std::string get_persistent_resource_filepath();
+    public: static std::string get_persistent_resource_dir();
     //REM: [TODO]
-    public: static std::string get_temporary_resource_filepath();
+    public: static std::string get_temporary_resource_dir();
 
     /**
      * @brief 
      * 
      * @param target_filepath
-     * @param required_root_filepath
+     * @param required_root_dir
      * 
      * @return bool
      */
     public: static bool validate_path(
       std::filesystem::path const & target_filepath,
-      std::filesystem::path const & required_root_filepath 
+      std::filesystem::path const & required_root_dir 
     );
   };
 

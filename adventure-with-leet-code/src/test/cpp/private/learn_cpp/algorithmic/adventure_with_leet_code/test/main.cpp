@@ -60,18 +60,18 @@ int main(int arg_c, char* arg_v[]) {
 //   assert(two_indices_003_ii.first == 1);
 //   assert(two_indices_003_ii.second == 3);
 
-//   std::string exec_parent_filepath = adventure_with_leet_code::util::
-//     Resource::get_exec_parent_filepath();
+//   std::string exec_parent_dir = adventure_with_leet_code::util::
+//     Resource::get_exec_parent_dir();
 
 //   std::string data_test_sqlite 
-//     = exec_parent_filepath + PATH_SEPARATOR + "resources" + PATH_SEPARATOR + "data.test.db";
+//     = exec_parent_dir + PATH_SEPARATOR + "resources" + PATH_SEPARATOR + "data.test.db";
 
 //   adventure_with_leet_code::util::Resource::validate_filepath(
 //     data_test_sqlite,
-//     exec_parent_filepath
+//     exec_parent_dir
 //   );
 
-//   std::fprintf(stdout, "<<< %s\n", exec_parent_filepath.c_str());
+//   std::fprintf(stdout, "<<< %s\n", exec_parent_dir.c_str());
 
 //   std::fprintf(stdout, "<<< %s\n", data_test_sqlite.c_str());
 

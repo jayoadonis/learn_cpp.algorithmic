@@ -16,7 +16,7 @@ TEST_CASE("testing resourcex", "[integration]") {
 
     std::string exec_parent_filepath 
       = adventure_with_leet_code::util::Resource::
-        get_exec_parent_filepath();
+        get_exec_parent_dir();
 
     REQUIRE( !exec_parent_filepath.empty() );
 
@@ -30,7 +30,7 @@ TEST_CASE("testing goldx", "[integration]") {
 
     std::string exec_parent_filepath 
       = adventure_with_leet_code::util::Resource::
-        get_exec_parent_filepath();
+        get_exec_parent_dir();
 
     REQUIRE( !exec_parent_filepath.empty() );
 
