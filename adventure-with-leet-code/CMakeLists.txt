@@ -65,6 +65,16 @@ set(CMAKE_STAGING_PREFIX_PATH
   "CMake Staging Prefix (Currently overwritten by: '${_PROJECT_CANONICAL_BASE_NAME}')"
   FORCE)
 
+# REM: [BUILD TREE, PRE_BUILD] Runtime Resource Path Handling (Template, read-only)
+include(GNUInstallDirs)
+if(WIN32)
+  set(_PROJECT_RESOURCE_DESTINATION
+    "../resources")
+else()
+  set(_PROJECT_RESOURCE_DESTINATION
+    "../${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources")
+endif()
+
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
     "CMake Build Type (Currently overwritten by: '${_PROJECT_CANONICAL_BASE_NAME}')" FORCE)

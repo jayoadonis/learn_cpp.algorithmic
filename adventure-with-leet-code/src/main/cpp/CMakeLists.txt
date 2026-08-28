@@ -90,13 +90,6 @@ target_include_directories(${_PROJECT_TARGET_MAIN_NAME}
   ${CMAKE_CURRENT_SOURCE_DIR}/private)
 
 # REM: [BUILD TREE, PRE_BUILD] Runtime Resource Path Handling (Template, read-only)
-if(WIN32)
-  set(_PROJECT_RESOURCE_DESTINATION
-    "../resources")
-else()
-  set(_PROJECT_RESOURCE_DESTINATION
-    "../${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources")
-endif()
 target_compile_definitions(${_PROJECT_TARGET_MAIN_NAME}
   PRIVATE
   LCXXA_AWLEETCODE_REZ_DIR="${_PROJECT_RESOURCE_DESTINATION}")

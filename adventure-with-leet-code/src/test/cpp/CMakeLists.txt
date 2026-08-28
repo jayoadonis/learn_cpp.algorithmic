@@ -120,21 +120,13 @@ catch_discover_tests(${_PROJECT_TARGET_TEST_NAME}
   LABELS "all"
 )
 
-if(WIN32)
-  set(_PROJECT_RESOURCE_DESTINATION
-    ${CMAKE_INSTALL_BINDIR}/resources)
-else()
-  set(_PROJECT_RESOURCE_DESTINATION
-    ${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources)
-endif()
-
 # REM: [PRE_BUILD] Runtime Path Resource Handling
 add_custom_command(TARGET
   ${_PROJECT_TARGET_TEST_NAME}
   PRE_BUILD
   COMMAND ${CMAKE_COMMAND}
   "-DSRC_DIR=${PROJECT_SOURCE_DIR}/src/test/resources"
-  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>/../${_PROJECT_RESOURCE_DESTINATION}"
+  "-DDST_DIR=$<TARGET_FILE_DIR:${_PROJECT_TARGET_TEST_NAME}>/${_PROJECT_RESOURCE_DESTINATION}"
   -P "${PROJECT_SOURCE_DIR}/cmake/sync-copy-paths-0.1.1-process.cmake"
   VERBATIM
   COMMENT "::: Synchronizing test resources"
