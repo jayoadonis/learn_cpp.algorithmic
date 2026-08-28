@@ -92,7 +92,7 @@ target_include_directories(${_PROJECT_TARGET_MAIN_NAME}
 # REM: [BUILD TREE, PRE_BUILD] Runtime Resource Path Handling (Template, read-only)
 if(WIN32)
   set(_PROJECT_RESOURCE_DESTINATION
-    "resources")
+    "../resources")
 else()
   set(_PROJECT_RESOURCE_DESTINATION
     "../${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources")

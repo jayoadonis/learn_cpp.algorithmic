@@ -147,14 +147,14 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util
     std::filesystem::path dynamic_resolved_path = base_binary_dir / relative_rez_path;
 
     //REM: Determine the correct allowed sandbox root based on the platform policy
-  #if defined(WIN32) || defined(_WIN32)
-    //REM: Windows expects resources right next to or inside the binary folder
-    std::filesystem::path allowed_root = base_binary_dir;
-  #else
-      //REM: Linux expects resources to back out into a shared folder (e.g., bin/../share/)
-      //REM: We expand the sandbox boundary to the common parent directory of the binary folder
+  // #if defined(WIN32) || defined(_WIN32)
+  //   //REM: Windows expects resources right next to or inside the binary folder
+  //   std::filesystem::path allowed_root = base_binary_dir;
+  // #else
+    //REM: (WINDOWS) 'path/to/parent/bin/../resources/', 
+    //REM: (UNIX-LIKE) 'path/to/parent/bin/../share/<project_name>/resources/'
     std::filesystem::path allowed_root = base_binary_dir.parent_path();
-  #endif
+  // #endif
 
       //REM: Validate against the appropriate platform sandbox root
     if (!Resource::validate_path(dynamic_resolved_path, allowed_root))

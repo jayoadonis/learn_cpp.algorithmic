@@ -58,3 +58,95 @@ $ cmake --install out/build/<generator_name>_<arch> --config <Debug|Release> [--
 ```bash
 $ cpack --config out/build/<generator_name>_<arch>/CPackConfig.cmake -B ./out/dist -C <Debug|Release> [-D CPACK_COMPONENTS_ALL="<install_component_name>"]
 ```
+
+---
+
+## Installation Application Layout (STANDARD)
+```bash
+#REM: Linux Style layout (both unix/unix-like)
+/usr/local/                    #REM: Or /opt/my_project/
+├── bin/
+│   └── my_app                 #REM: The executable binary or script
+├── lib/
+│   └── libmy_app_shared.dylib #REM: Shared libraries (macOS uses .dylib instead of .so)
+├── share/
+│   ├── doc/my_app/            #REM: Documentation and licenses
+│   └── my_app/
+│       ├── icons/             #REM: Application icons
+│       └── config.conf        #REM: Global configuration files
+└── include/
+    └── my_app.h               #REM: Header files (if distributing a development library)
+```
+```bash
+#REM: Apple App bundle Layout (MacOS)
+MyApplication.app/             #REM: Looks like a single clickable icon in Finder
+└── Contents/
+    ├── Info.plist             #REM: Metadata (App name, version, permissions, icons)
+    ├── MacOS/
+    │   └── MyApplication      #REM: The actual executable binary
+    ├── Resources/
+    │   ├── AppIcon.icns       #REM: Apple-format icon file
+    │   ├── Assets.car         #REM: Compiled UI assets
+    │   └── en.lproj/          #REM: Localization/Language files
+    ├── Frameworks/
+    │   └── Embedded.framework #REM: Bundled private libraries and dependencies
+    └── PlugIns/               #REM: Optional app extensions or plugins
+```
+```bash
+#REM: Windows App Layout
+C:\\Program Files\\MyApplication\\    #REM: The root application folder
+├── MyApplication.exe                 #REM: The main clickable executable file
+├── app_icon.ico                      #REM: Windows-format icon file
+├── config.json                       #REM: Local configuration or settings file
+├── System.Data.SQLite.dll            #REM: Dynamic Link Library (Windows equivalent to Linux .so)
+├── OpenSSL.dll                       #REM: Third-party dependency library
+└── assets\\                          #REM: Subfolder for static assets
+    ├── images\\                      #REM: UI images and graphic assets
+    └── locales\\                     #REM: Language and translation files
+```
+
+## Installation Application Layout (OUR WAY)
+```bash
+#REM: Linux Style layout (both unix/unix-like)
+/usr/local/                    #REM: Or /opt/my_project/
+├── bin/
+│   └── my_app                 #REM: The executable binary or script
+├── lib/
+│   └── libmy_app_shared.dylib #REM: Shared libraries (macOS uses .dylib instead of .so)
+├── share/
+│   ├── doc/my_app/            #REM: Documentation and licenses
+│   └── my_app/
+│       └── resources/               
+│           ├── icons/         #REM: Application icons
+│           └── config.conf    #REM: Global configuration files
+└── include/
+    └── my_app.h               #REM: Header files (if distributing a development library)
+```
+```bash
+#REM: Apple App bundle Layout (MacOS) [Same with the standard]
+MyApplication.app/             #REM: Looks like a single clickable icon in Finder
+└── Contents/
+    ├── Info.plist             #REM: Metadata (App name, version, permissions, icons)
+    ├── MacOS/
+    │   └── MyApplication      #REM: The actual executable binary
+    ├── Resources/
+    │   ├── AppIcon.icns       #REM: Apple-format icon file
+    │   ├── Assets.car         #REM: Compiled UI assets
+    │   └── en.lproj/          #REM: Localization/Language files
+    ├── Frameworks/
+    │   └── Embedded.framework #REM: Bundled private libraries and dependencies
+    └── PlugIns/               #REM: Optional app extensions or plugins
+```
+```bash
+#REM: Windows App Layout
+C:\\Program Files\\MyApplication\\    #REM: The root application folder
+├── bin\\
+│   ├── MyApplication.exe             #REM: The main clickable executable file
+│   ├── app_icon.ico                  #REM: Windows-format icon file
+│   ├── System.Data.SQLite.dll        #REM: Dynamic Link Library (Windows equivalent to Linux .so)
+│   └── OpenSSL.dll                   #REM: Third-party dependency library
+└── resources\\                       #REM: Subfolder for static assets
+    ├── images\\                      #REM: UI images and graphic assets
+    ├── locales\\                     #REM: Language and translation files
+    └── config.json                   #REM: Local configuration or settings file
+```
