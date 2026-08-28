@@ -10,6 +10,9 @@ namespace learn_cpp::algorithmic::adventure_with_leet_code::util {
   class LCXXA_AWLEETCODE_API Resource {
 
     public: static std::string get_exec_parent_dir();
+
+    public: static std::filesystem::path get_template_resource_dir();
+
     //REM: [TODO]
     public: static std::string get_persistent_resource_dir();
     //REM: [TODO]

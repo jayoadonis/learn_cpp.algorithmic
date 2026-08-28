@@ -26,19 +26,19 @@ TEST_CASE("testing resource", "[unit]") {
 
   SECTION("Check 2sum content") {
     
-    #if defined(_WIN32)
-    # define REZ "../bin/resources"
-    #elif defined(__GNUC__) || defined(__clang__)
-    # define REZ "../share/adventure-with-leet-code/resources"
-    #else
-    # define REZ "resources"
-    #endif
+    // #if defined(_WIN32)
+    // # define REZ "../bin/resources"
+    // #elif defined(__GNUC__) || defined(__clang__)
+    // # define REZ "../share/adventure-with-leet-code/resources"
+    // #else
+    // # define REZ "resources"
+    // #endif
     std::filesystem::path filepath 
       = adventure_with_leet_code::util::Resource::
-        get_exec_parent_dir() + "/" + REZ + "/data/2sum.test.txt";
+        get_template_resource_dir() / "data" / "2sum.test.txt";
 
-    // std::fprintf(stdout, ">>><<<< %s\n", 
-    //   filepath.string().c_str());
+    std::fprintf(stdout, ">>><<< %s\n", 
+      filepath.string().c_str());
 
     std::fstream file_stream(filepath, 
       std::ios::in | std::ios::out);
