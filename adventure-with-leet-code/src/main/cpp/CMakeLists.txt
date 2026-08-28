@@ -189,7 +189,7 @@ install(EXPORT ${_PROJECT_NAME}_targets
 # REM: [INSTALL] Runtime Path Resource Handling
 install(
   DIRECTORY "${PROJECT_SOURCE_DIR}/src/main/resources/"
-  DESTINATION "${_PROJECT_RESOURCE_DESTINATION}"
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/${_PROJECT_NAME}/resources"
   COMPONENT "${_PROJECT_NAME}_main"
   PATTERN "*.keep" EXCLUDE
 )
