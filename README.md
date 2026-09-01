@@ -37,7 +37,7 @@ $ cmake --build out/build/<generator_name>_<arch> --config <Debug|Release> [--cl
 
 ### Test [^ToC](#table-of-content)
 ```bash
-$ ctest --test-dir out/build/<generator_name>_<arch> -C <Debug|Release> [-VV] [-R <test_name_pattern>] [-L <label_name_pattern>]
+$ ctest --test-dir out/build/<generator_name>_<arch>/subproject_path -C <Debug|Release> [-VV] [-R <test_name_pattern>] [-L <label_name_pattern>]
 ```
 
 ### Run Executable [^ToC](#table-of-content)
@@ -58,95 +58,124 @@ $ cmake --install out/build/<generator_name>_<arch> --config <Debug|Release> [--
 ```bash
 $ cpack --config out/build/<generator_name>_<arch>/CPackConfig.cmake -B ./out/dist -C <Debug|Release> [-D CPACK_COMPONENTS_ALL="<install_component_name>"]
 ```
-
+#
 ---
+#
 
-## Installation Application Layout (STANDARD)
-```bash
-#REM: Linux Style layout (both unix/unix-like)
-/usr/local/                    #REM: Or /opt/my_project/
-├── bin/
-│   └── my_app                 #REM: The executable binary or script
-├── lib/
-│   └── libmy_app_shared.dylib #REM: Shared libraries (macOS uses .dylib instead of .so)
-├── share/
-│   ├── doc/my_app/            #REM: Documentation and licenses
-│   └── my_app/
-│       ├── icons/             #REM: Application icons
-│       └── config.conf        #REM: Global configuration files
-└── include/
-    └── my_app.h               #REM: Header files (if distributing a development library)
-```
-```bash
-#REM: Apple App bundle Layout (MacOS)
-MyApplication.app/             #REM: Looks like a single clickable icon in Finder
-└── Contents/
-    ├── Info.plist             #REM: Metadata (App name, version, permissions, icons)
-    ├── MacOS/
-    │   └── MyApplication      #REM: The actual executable binary
-    ├── Resources/
-    │   ├── AppIcon.icns       #REM: Apple-format icon file
-    │   ├── Assets.car         #REM: Compiled UI assets
-    │   └── en.lproj/          #REM: Localization/Language files
-    ├── Frameworks/
-    │   └── Embedded.framework #REM: Bundled private libraries and dependencies
-    └── PlugIns/               #REM: Optional app extensions or plugins
-```
-```bash
-#REM: Windows App Layout
-C:\\Program Files\\MyApplication\\    #REM: The root application folder
-├── MyApplication.exe                 #REM: The main clickable executable file
-├── app_icon.ico                      #REM: Windows-format icon file
-├── config.json                       #REM: Local configuration or settings file
-├── System.Data.SQLite.dll            #REM: Dynamic Link Library (Windows equivalent to Linux .so)
-├── OpenSSL.dll                       #REM: Third-party dependency library
-└── assets\\                          #REM: Subfolder for static assets
-    ├── images\\                      #REM: UI images and graphic assets
-    └── locales\\                     #REM: Language and translation files
-```
+## Sum-up CMake Scripts
 
-## Installation Application Layout (OUR WAY)
-```bash
-#REM: Linux Style layout (both unix/unix-like)
-/usr/local/                    #REM: Or /opt/my_project/
-├── bin/
-│   └── my_app                 #REM: The executable binary or script
-├── lib/
-│   └── libmy_app_shared.dylib #REM: Shared libraries (macOS uses .dylib instead of .so)
-├── share/
-│   ├── doc/my_app/            #REM: Documentation and licenses
-│   └── my_app/
-│       └── resources/               
-│           ├── icons/         #REM: Application icons
-│           └── config.conf    #REM: Global configuration files
-└── include/
-    └── my_app.h               #REM: Header files (if distributing a development library)
+```cmake
+#REM: Root
+cmake_minimum_required(VERSION 3.24)
+project(project-name
+  VERSIN 0.1.0
+  DESCRIPTION ""
+  HOMEPAGE_URL ""
+  LANGUAGES CXX)
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "" FORCE)
+endif()
+_PROJECT_GROUP
+_PROJECT_NAME
+_PROJECT_VERSION
+_PROJECT_TARGET_MAIN_NAME
+_PROJECT_TARGET_MAIN_TYPE
+_PROJECT_TARGET_TEST_NAME
+_PROJECT_TARGET_TEST_TYPE
+_PROJECT_INSTALL_CONFIG_PREFIX_NAME
+_PROJECT_PRECOMPILED_DEPS_DIR
+list APPEND CMAKE_PREFIX_PATH ${_PROJECT_PRECOMPILED_DEPS_DIR}
+include(CTest)
+add_subdirectory(src/main/cpp)
+if(BUILD_TESTING)
+  enable_testing()
+  add_subdirectory(src/test/cpp)
+endif()
+CPACK_PACKAGE_VENDOR
+CPACK_PACKAGE_NAME
+CPACK_PACKAGE_VERSION
+CPACK_GENERATOR "ZIP;TGZ"
+CPACK_RESOURCES_FILE_LICENSE
+CPACK_VERBATIM_VARIABLES TRUE
+include(CPack)
+
+
+#REM: Subdirectory
+FetchContent_Declare
+FetchContent_MakeAvailable
+file(GLOB_RECURSE _PRIVATE_SOURCES CONFIGURE_DEPENDS *.cc *.cxx *.cpp *.h *.hxx *.hpp *.tpp)
+file(GLOB_RECURSE _PUBLIC_SOURCES CONFIGURE_DEPENDS *.h *.hxx *.hpp *.tpp)
+add_executable | add_library ${_PROJECT_TARGET_(MAIN|TEST)_NAME}
+set_target_properties
+target_compile_features
+target_compile_options
+target_compile_definitions
+target_sources
+target_include_directories
+target_link_libraries
+if(BUILD_TESTING)
+  add_library "project-main-interface" INTERFACE
+  target_include_directory PRIVATE "path/to/private"
+  target_link_libraries ${_PROJECT_TARGET_MAIN_NAME}
+endif()
+add_custom_command PRE_BUILD static resources for development build copy
+add_custom_command POST_BUILD dlls for development build copy
+#REM: [BEGIN] only for test target
+target_compile_definitions(${_PROJECT_TARGET_TEST_NAME}
+  PRIVATE
+  CATCH_CONFIG_FAST_COMPILE
+)
+catch_discover_tests(${_PROJECT_TARGET_TEST_NAME}
+  DISCOVERY_MODE PRE_TEST # REM: Prevents post-build script failures from killing the compiler run
+  ADD_TAGS_AS_LABELS
+  PROPERTIES
+  LABELS "all"
+)
+#REM: [END] only for test target
+include(GNUInstallDirs)
+install bin lib archive inlucde
+install static resources, pattern exclude or include
 ```
+#
+---
+## Development Repository Structure
 ```bash
-#REM: Apple App bundle Layout (MacOS) [Same with the standard]
-MyApplication.app/             #REM: Looks like a single clickable icon in Finder
-└── Contents/
-    ├── Info.plist             #REM: Metadata (App name, version, permissions, icons)
-    ├── MacOS/
-    │   └── MyApplication      #REM: The actual executable binary
-    ├── Resources/
-    │   ├── AppIcon.icns       #REM: Apple-format icon file
-    │   ├── Assets.car         #REM: Compiled UI assets
-    │   └── en.lproj/          #REM: Localization/Language files
-    ├── Frameworks/
-    │   └── Embedded.framework #REM: Bundled private libraries and dependencies
-    └── PlugIns/               #REM: Optional app extensions or plugins
-```
-```bash
-#REM: Windows App Layout
-C:\\Program Files\\MyApplication\\    #REM: The root application folder
-├── bin\\
-│   ├── MyApplication.exe             #REM: The main clickable executable file
-│   ├── app_icon.ico                  #REM: Windows-format icon file
-│   ├── System.Data.SQLite.dll        #REM: Dynamic Link Library (Windows equivalent to Linux .so)
-│   └── OpenSSL.dll                   #REM: Third-party dependency library
-└── resources\\                       #REM: Subfolder for static assets
-    ├── images\\                      #REM: UI images and graphic assets
-    ├── locales\\                     #REM: Language and translation files
-    └── config.json                   #REM: Local configuration or settings file
+project-name/
+|--- .gitignore
+|--- .gitattributes
+|--- CMakeLists.txt
+|--- cmake/
+|   |--- sync-copy-files.process.cmake            #REM: usually for windows dlls deps
+|   \--- sync-copy-paths.process.cmake            #REM: usually for static resources
+|--- out/
+|   |--- build/
+|   |--- install/                                 #REM: Staging
+|   \--- dist/                                    #REM: zip, tgz, msi, dnf, & etc...
+\--- src/
+    |--- main/
+    |   |--- cpp/
+    |   |   |--- private/
+    |   |   |   |--- pkg/main.{cc,cxx,cpp}        #REM: main exec target
+    |   |   |   \--- pkg/**/*.{cc,cxx,cpp,h,hxx,hpp,tpp}
+    |   |   \--- public/
+    |   |       \--- pkg/**/*.{h,hxx,hpp,tpp}
+    |   \--- resources/
+    |       |--- config/
+    |       |   |--- .env.development             #REM: Debug
+    |       |   \--- .env.production              #REM: Release
+    |       |--- document/
+    |       \--- image/
+    \--- test/
+        |--- cpp/
+        |   \--- private/
+        |       |--- pkg/main.{cc,cxx,cpp}        #REM: test exec target
+        |       |--- pkg/unit/**/*.{h,hxx,hpp,tpp}
+        |       |--- pkg/integration/**/*.{h,hxx,hpp,tpp}
+        |       \--- pkg/**/*.{c,cxx,cpp,h,hxx,hpp,tpp}
+        \--- resources/
+            |--- config/
+            |   |--- .env.development.test
+            |   \--- .env.production.test
+            |--- document/
+            \--- image/
 ```
